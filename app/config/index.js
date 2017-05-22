@@ -1,0 +1,1 @@
+export const SELECT_PATH = 'SELECT_PATH';

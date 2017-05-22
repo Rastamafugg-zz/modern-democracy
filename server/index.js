@@ -10,8 +10,16 @@ const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngr
 const resolve = require('path').resolve;
 const app = express();
 
-// If you need a backend, e.g. an API, add your custom backend-specific middleware here
-// app.use('/api', myApi);
+const bodyParser = require('body-parser');
+const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
+const Schema = require('./graphql/index');
+
+console.log('Mounting GraphQL Endpoint');
+app.use('/graphql', bodyParser.json(), graphqlExpress({ schema: Schema }));
+console.log('Mounted GraphQL Endpoint');
+console.log('Mounting GraphIQL Endpoint');
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+console.log('Mounted GraphIQL Endpoint');
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

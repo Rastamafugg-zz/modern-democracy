@@ -1,0 +1,68 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
+import BCLawsDocument from './lawDocument';
+
+class BCLawsDocumentList extends Component {
+  constructor() {
+    super();
+    this.state = {
+    };
+  }
+
+  setLaw(lawId) {
+    if (lawId !== "") {
+      this.setState({lawId});
+    } else {
+      delete this.state.lawId;
+    }
+  }
+
+  render() {
+    const { path, data: {lawsDocumentList = []} } = this.props;
+
+    let lawDocument = (this.state.lawId) ? (<BCLawsDocument path={[...path, this.state.lawId]} />) : undefined;
+    return (
+      <div>
+        <select name="lawsList" onChange={(event) => this.setLaw(event.target.value)}>
+          {
+            lawsDocumentList && lawsDocumentList.map(({title, id}) => (<option key={id} value={id}>{title}</option>))
+          }
+        </select>
+        {lawDocument}
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return {path: ownProps.path}
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadLawIndex: () => (dispatch({type: "LAWS_INDEX_FETCH_REQUESTED"}))
+  }
+};
+
+
+const query = gql`
+    query LawsDocument($path: [String]) {
+        lawsDocumentList(path: $path) {
+            id,
+            title,
+            location,
+            type,
+            parent,
+            ancestors,
+            isVisible,
+            order
+        }
+    }
+`;
+
+export default compose(
+    graphql(query),
+    connect(mapStateToProps, mapDispatchToProps)
+)(BCLawsDocumentList);

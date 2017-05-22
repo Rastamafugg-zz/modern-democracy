@@ -21,16 +21,19 @@ const AppWrapper = styled.div`
   min-height: 100%;
   padding: 0 16px;
   flex-direction: column;
+  color: #000000;
+  background-color: #41ADDD;
+  min-height: 100vh;
 `;
 
 export function App(props) {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        titleTemplate="%s - Modern Democracy"
+        defaultTitle="Modern Democracy"
         meta={[
-          { name: 'description', content: 'A React.js Boilerplate application' },
+          { name: 'description', content: 'Modern Democracy' },
         ]}
       />
       <Header />

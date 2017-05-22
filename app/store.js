@@ -10,13 +10,15 @@ import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 
-export default function configureStore(initialState = {}, history) {
-  // Create the store with two middlewares
+export default function configureStore(initialState = {}, history, apolloClient) {
+  // Create the store with three middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
+  // 3. apolloClient.middleware: Middleware for Apollo Client
   const middlewares = [
     sagaMiddleware,
     routerMiddleware(history),
+    apolloClient.middleware(),
   ];
 
   const enhancers = [
@@ -33,7 +35,9 @@ export default function configureStore(initialState = {}, history) {
   /* eslint-enable */
 
   const store = createStore(
-    createReducer(),
+    createReducer({
+      apollo: apolloClient.reducer(),
+    }),
     fromJS(initialState),
     composeEnhancers(...enhancers)
   );

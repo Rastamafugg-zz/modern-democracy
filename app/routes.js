@@ -39,10 +39,39 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/features',
-      name: 'features',
+      path: '/bylaws',
+      name: 'bylaws',
       getComponent(nextState, cb) {
-        import('containers/FeaturePage')
+        import('components/bylaws')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/taxes',
+      name: 'taxes',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/taxes/reducer'),
+          import('containers/taxes/sagas'),
+          import('components/taxes'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('taxes', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/bclaws',
+      name: 'bclaws',
+      getComponent(nextState, cb) {
+        import('components/bclaws')
           .then(loadModule(cb))
           .catch(errorLoading);
       },

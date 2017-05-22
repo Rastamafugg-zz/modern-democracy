@@ -6,12 +6,16 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  home: {
-    id: 'boilerplate.components.Header.home',
-    defaultMessage: 'Home',
+  bylaws: {
+    id: 'boilerplate.components.Header.bylaws',
+    defaultMessage: 'Strata Bylaws',
   },
-  features: {
-    id: 'boilerplate.components.Header.features',
-    defaultMessage: 'Features',
+  bclaws: {
+    id: 'boilerplate.components.Header.bclaws',
+    defaultMessage: 'BC Laws',
+  },
+  taxes: {
+    id: 'boilerplate.components.Header.taxes',
+    defaultMessage: 'BC Tax Stats',
   },
 });
