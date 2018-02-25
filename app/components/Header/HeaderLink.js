@@ -1,5 +1,18 @@
 import { Link } from 'react-router';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+const media = {
+  mobile: (...args) => css`
+    @media (max-width: 749px) {
+      ${ css(...args) }
+    }
+  `,
+  desktop: (...args) => css`
+    @media (min-width: 750px) {
+      ${ css(...args) }
+    }
+  `,
+}
 
 export default styled(Link)`
   display: inline-flex;
@@ -14,7 +27,7 @@ export default styled(Link)`
   outline: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 12px;
   border: 2px solid #FFFFFF;
   color: #FFFFFF;
   background-color: #41ADDD;

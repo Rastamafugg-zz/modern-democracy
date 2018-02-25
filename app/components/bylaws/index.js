@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import Division from './division';
@@ -41,23 +40,38 @@ const query = gql`{
       division,
       title,
       sections {
-        section,
-        title,
-        text,
+        ...bylawSection
         sections {
-          section,
-          title,
-          text,
+          ...bylawSection
           sections {
-            section,
-            title,
-            text
+            ...bylawSection
           }
         }
       }
     }
   }
-}`;
+}
+
+fragment bylawSection on BylawSection {
+  section,
+  title,
+  ... on BylawSimpleSection {
+    text
+  },
+  ... on BylawComplexSection {
+    content {
+      text,
+      sections {
+        section,
+        title,
+        ... on BylawSimpleSection {
+          text
+        },
+      }
+    }
+  }
+}
+`;
 
 export default compose(
     graphql(query),

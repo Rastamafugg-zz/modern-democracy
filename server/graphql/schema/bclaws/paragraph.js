@@ -6,7 +6,8 @@ const Paragraph = `
     id: String!
     type: ContentType!
     num: String!
-    text: String!
+    text: String
+    description: String
     content: [SubParagraph]
   }
 `;

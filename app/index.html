@@ -5,9 +5,17 @@
     <meta charset="utf-8">
     <!-- Make the page mobile compatible -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <!-- Allow installing the app to the homescreen -->
     <link rel="manifest" href="manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <!-- Semantic UI CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"-->
+          <!--integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="-->
+          <!--crossorigin=""/>-->
     <title>Modern Democracy</title>
   </head>
   <body>
@@ -16,8 +24,7 @@
 
     <!-- The app hooks into this div -->
     <div id="app"></div>
-    <!-- Open Sans Font -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
     <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically includes all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this HTML file. Don't add any assets here! (Check out the webpack config files in internals/webpack for details) -->
+    <script src="https://use.fontawesome.com/3cea0f6edf.js"></script>
   </body>
 </html>

@@ -2,7 +2,7 @@
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
-import { getAsyncInjectors } from './utils/asyncInjectors';
+import { getAsyncInjectors } from 'utils/asyncInjectors';
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -13,8 +13,8 @@ const loadModule = (cb) => (componentModule) => {
 };
 
 export default function createRoutes(store) {
-  // create reusable async injectors using getAsyncInjectors factory
-  const { injectReducer, injectSagas } = getAsyncInjectors(store);
+  // Create reusable async injectors using getAsyncInjectors factory
+  const { injectReducer, injectSagas } = getAsyncInjectors(store); // eslint-disable-line no-unused-vars
 
   return [
     {
@@ -22,17 +22,32 @@ export default function createRoutes(store) {
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage/reducer'),
-          import('containers/HomePage/sagas'),
           import('containers/HomePage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('home', reducer.default);
-          injectSagas(sagas.default);
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
 
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/taxes',
+      name: 'taxes',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Taxes/reducer'),
+          import('containers/Taxes/sagas'),
+          import('containers/Taxes'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('taxes', reducer.default);
+          injectSagas(sagas.default);
           renderRoute(component);
         });
 
@@ -42,26 +57,18 @@ export default function createRoutes(store) {
       path: '/bylaws',
       name: 'bylaws',
       getComponent(nextState, cb) {
-        import('components/bylaws')
-          .then(loadModule(cb))
-          .catch(errorLoading);
-      },
-    }, {
-      path: '/taxes',
-      name: 'taxes',
-      getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/taxes/reducer'),
-          import('containers/taxes/sagas'),
-          import('components/taxes'),
+          // import('containers/Bylaws/reducer'),
+          import('containers/Bylaws/sagas'),
+          import('containers/Bylaws'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('taxes', reducer.default);
+        importModules.then(([sagas, component]) => {
+        // importModules.then(([reducer, sagas, component]) => {
+          // injectReducer('bylaws', reducer.default);
           injectSagas(sagas.default);
-
           renderRoute(component);
         });
 
@@ -71,9 +78,41 @@ export default function createRoutes(store) {
       path: '/bclaws',
       name: 'bclaws',
       getComponent(nextState, cb) {
-        import('components/bclaws')
-          .then(loadModule(cb))
-          .catch(errorLoading);
+        const importModules = Promise.all([
+          // import('containers/Bclaws/reducer'),
+          import('containers/Bclaws/sagas'),
+          import('containers/Bclaws'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([sagas, component]) => {
+          // injectReducer('bclaws', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/strataMap',
+      name: 'strataMap',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/StrataMap/reducer'),
+          import('containers/StrataMap/sagas'),
+          import('containers/StrataMap'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('strataMap', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
       },
     }, {
       path: '*',

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -12,16 +13,17 @@ class BCLawsActList extends Component {
   }
 
   setAct(actId) {
-    this.setState({actId});
+    this.setState({ actId });
   }
 
   render() {
-    const { path, data: {lawsDocumentList = []} } = this.props;
+    const { path, data: { lawsDocumentList = [] } } = this.props;
 
-    let lawSelector = (this.state.actId) ? (<BCLawsDocumentList path={[...path, this.state.actId]} />) : undefined;
+    const lawSelector = (this.state.actId) ? (<BCLawsDocumentList path={[...path, this.state.actId]} />) : undefined;
     return (
       <div>
         <select name="lawsList" onChange={(event) => this.setAct(event.target.value)}>
+          <option key={''} value={''}>Select an act</option>
           {
             lawsDocumentList && lawsDocumentList.map(({title, id}) => (<option key={id} value={id}>{title}</option>))
           }
@@ -32,15 +34,16 @@ class BCLawsActList extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {path: ownProps.path}
+BCLawsActList.propTypes = {
+  path: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadLawIndex: () => (dispatch({type: "LAWS_INDEX_FETCH_REQUESTED"}))
-  }
-};
+const mapStateToProps = (state, ownProps) => ({ path: ownProps.path });
+
+const mapDispatchToProps = (dispatch) => ({
+  loadLawIndex: () => (dispatch({ type: 'LAWS_INDEX_FETCH_REQUESTED' })),
+});
 
 
 const query = gql`

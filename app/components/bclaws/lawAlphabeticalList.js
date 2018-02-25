@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { graphql, compose } from 'react-apollo';
-import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
 import BCLawsActList from './lawActList';
 
 class BCLawsAlphabeticalList extends Component {
@@ -12,18 +10,19 @@ class BCLawsAlphabeticalList extends Component {
   }
 
   setLetter(letter) {
-    this.setState({letter});
+    this.setState({ letter });
   }
 
   render() {
-    const { path, data: {lawsDocumentList = []} } = this.props;
+    const { path, data: { lawsDocumentList = [] } } = this.props;
 
-    let lawSelector = (this.state.letter) ? (<BCLawsActList path={[...path, this.state.letter]} />) : undefined;
+    const lawSelector = (this.state.letter) ? (<BCLawsActList path={[...path, this.state.letter]} />) : undefined;
     return (
       <div>
         <select name="lawsByLetter" onChange={(event) => this.setLetter(event.target.value)}>
+          <option key={''} value={''}>Select a letter</option>
           {
-            lawsDocumentList && lawsDocumentList.map(({title, id}) => (<option key={id} value={id}>{title}</option>))
+            lawsDocumentList && lawsDocumentList.map(({ title, id }) => (<option key={id} value={id}>{title}</option>))
           }
         </select>
         {lawSelector}
@@ -32,33 +31,9 @@ class BCLawsAlphabeticalList extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {path: ownProps.path}
+BCLawsAlphabeticalList.propTypes = {
+  path: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadLawIndex: () => (dispatch({type: "LAWS_INDEX_FETCH_REQUESTED"}))
-  }
-};
-
-
-const query = gql`
-    query LawsDocument($path: [String]) {
-        lawsDocumentList(path: $path) {
-            id,
-            title,
-            location,
-            type,
-            parent,
-            ancestors,
-            isVisible,
-            order
-        }
-    }
-`;
-
-export default compose(
-    graphql(query),
-    connect(mapStateToProps, mapDispatchToProps)
-)(BCLawsAlphabeticalList);
+export default BCLawsAlphabeticalList;

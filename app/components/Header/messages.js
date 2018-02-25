@@ -6,6 +6,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  strataMap: {
+    id: 'boilerplate.components.Header.strataMap',
+    defaultMessage: 'Strata Map Tool',
+  },
   bylaws: {
     id: 'boilerplate.components.Header.bylaws',
     defaultMessage: 'Strata Bylaws',

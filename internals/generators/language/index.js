@@ -34,31 +34,31 @@ module.exports = {
     actions.push({
       type: 'modify',
       path: '../../app/i18n.js',
-      pattern: /('react-intl\/locale-data\/[a-z]+';\n)(?!.*'react-intl\/locale-data\/[a-z]+';)/g,
+      pattern: /('react-intl\/locale-data\/[a-z]+';\r?\n)(?!.*'react-intl\/locale-data\/[a-z]+';)/g,
       templateFile: './language/intl-locale-data.hbs',
     });
     actions.push({
       type: 'modify',
       path: '../../app/i18n.js',
-      pattern: /(\s+'[a-z]+',\n)(?!.*\s+'[a-z]+',)/g,
+      pattern: /(\s+'[a-z]+',\r?\n)(?!.*\s+'[a-z]+',)/g,
       templateFile: './language/app-locale.hbs',
     });
     actions.push({
       type: 'modify',
       path: '../../app/i18n.js',
-      pattern: /(from\s'.\/translations\/[a-z]+.json';\n)(?!.*from\s'.\/translations\/[a-z]+.json';)/g,
+      pattern: /(from\s'.\/translations\/[a-z]+.json';\r?\n)(?!.*from\s'.\/translations\/[a-z]+.json';)/g,
       templateFile: './language/translation-messages.hbs',
     });
     actions.push({
       type: 'modify',
       path: '../../app/i18n.js',
-      pattern: /(addLocaleData\([a-z]+LocaleData\);\n)(?!.*addLocaleData\([a-z]+LocaleData\);)/g,
+      pattern: /(addLocaleData\([a-z]+LocaleData\);\r?\n)(?!.*addLocaleData\([a-z]+LocaleData\);)/g,
       templateFile: './language/add-locale-data.hbs',
     });
     actions.push({
       type: 'modify',
       path: '../../app/i18n.js',
-      pattern: /([a-z]+:\sformatTranslationMessages\('[a-z]+',\s[a-z]+TranslationMessages\),\n)(?!.*[a-z]+:\sformatTranslationMessages\('[a-z]+',\s[a-z]+TranslationMessages\),)/g,
+      pattern: /([a-z]+:\sformatTranslationMessages\('[a-z]+',\s[a-z]+TranslationMessages\),\r?\n)(?!.*[a-z]+:\sformatTranslationMessages\('[a-z]+',\s[a-z]+TranslationMessages\),)/g,
       templateFile: './language/format-translation-messages.hbs',
     });
     actions.push({
@@ -70,7 +70,7 @@ module.exports = {
     actions.push({
       type: 'modify',
       path: '../../app/app.js',
-      pattern: /(System\.import\('intl\/locale-data\/jsonp\/[a-z]+\.js'\),\n)(?!.*System\.import\('intl\/locale-data\/jsonp\/[a-z]+\.js'\),)/g,
+      pattern: /(System\.import\('intl\/locale-data\/jsonp\/[a-z]+\.js'\),\r?\n)(?!.*System\.import\('intl\/locale-data\/jsonp\/[a-z]+\.js'\),)/g,
       templateFile: './language/polyfill-intl-locale.hbs',
     });
     actions.push(

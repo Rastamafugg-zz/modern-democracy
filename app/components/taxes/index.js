@@ -10,7 +10,7 @@ class Taxes extends Component {
   constructor() {
     super();
     this.state = {
-      regionalDistrict: "CAP",
+      regionalDistrict: 'CAP',
       year: 2016,
     };
   }

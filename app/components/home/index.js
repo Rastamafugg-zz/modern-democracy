@@ -39,6 +39,13 @@ class Home extends Component {
 						</Link>
 					</Grid.Column>
 				</Grid>
+				<Grid columns={1}>
+					<Grid.Column>
+						<Link to='/strataMap'>
+							<Button primary>Strata Map Tool</Button>
+						</Link>
+					</Grid.Column>
+				</Grid>
 			</Container>
 		);
 	}

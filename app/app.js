@@ -80,7 +80,7 @@ const rootRoute = {
 
 const render = (messages) => {
   ReactDOM.render(
-    <ApolloProvider store={store} client={apolloClient}>
+    <ApolloProvider store={store} client={apolloClient} immutable={true}>
       <LanguageProvider messages={messages}>
         <Router
           history={history}

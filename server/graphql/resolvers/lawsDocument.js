@@ -3,31 +3,29 @@ const xamel = require('xamel');
 const { BCLAWS_URL, BCLAWS_DOC_URL } = require('../config');
 
 function fetchChildNode(xml, nodeName, allowMultipleValues = false) {
-  let childNodes = xml.$(nodeName);
+  const childNodes = xml.$(nodeName);
   if (childNodes.length === 0) {
     console.error(`${nodeName} node not found in returned XML document.`);
   } else if (childNodes.length === 1) {
     return childNodes.eq(0);
+  } else if (allowMultipleValues) {
+    return childNodes;
   } else {
-    if (allowMultipleValues) {
-      return childNodes;
-    } else {
-      console.error(`Too many ${nodeName} nodes not found in returned XML document.`);
-    }
+    console.error(`Too many ${nodeName} nodes not found in returned XML document.`);
   }
 }
 
 function parseDivision(divisionDoc) {
-  let division = {
+  const division = {
     id: divisionDoc.attr('id'),
     text: divisionDoc.$('bcl:text/text()'),
     num: divisionDoc.$('bcl:num/text()'),
   };
-  let sectionDocs = divisionDoc.$('bcl:section');
+  const sectionDocs = divisionDoc.$('bcl:section');
   if (sectionDocs && sectionDocs.length > 0) {
     division.sections = [];
-    for (let x=0; x < sectionDocs.length; x++) {
-      let sectionDoc = sectionDocs.eq(x);
+    for (let x = 0; x < sectionDocs.length; x += 1) {
+      const sectionDoc = sectionDocs.eq(x);
       division.sections.push(parseSection(sectionDoc));
     }
   }
@@ -35,25 +33,27 @@ function parseDivision(divisionDoc) {
 }
 
 function parseSection(sectionDoc) {
-  let section = {
+  const section = {
     id: sectionDoc.attr('id'),
     marginalNote: sectionDoc.$('bcl:marginalnote/text()'),
     num: sectionDoc.$('bcl:num/text()'),
     text: sectionDoc.$('bcl:text/text()'),
-    content: []
   };
-  let subsectionsDoc = sectionDoc.$('bcl:subsection');
+  const subsectionsDoc = sectionDoc.$('bcl:subsection');
+  const paragraphsDoc = sectionDoc.$('bcl:paragraph');
+  if (subsectionsDoc || paragraphsDoc) {
+    section.content = [];
+  }
   if (subsectionsDoc) {
-    for (let x=0; x < subsectionsDoc.length; x++) {
-      let subsectionDoc = subsectionsDoc.eq(x);
+    for (let x = 0; x < subsectionsDoc.length; x += 1) {
+      const subsectionDoc = subsectionsDoc.eq(x);
       section.content.push(parseSubSection(subsectionDoc));
     }
     // console.log(sectionsDoc[0])
   }
-  let paragraphsDoc = sectionDoc.$('bcl:paragraph');
   if (paragraphsDoc) {
-    for (let x=0; x < paragraphsDoc.length; x++) {
-      let paragraphDoc = paragraphsDoc.eq(x);
+    for (let x = 0; x < paragraphsDoc.length; x += 1) {
+      const paragraphDoc = paragraphsDoc.eq(x);
       section.content.push(parseParagraph(paragraphDoc));
     }
     // console.log(sectionsDoc[0])
@@ -63,25 +63,27 @@ function parseSection(sectionDoc) {
 }
 
 function parseSubSection(subSectionDoc) {
-  let subSection = {
+  const subSection = {
     id: subSectionDoc.attr('id'),
-    type: "SubSection",
+    type: 'SubSection',
     text: subSectionDoc.$('bcl:text/text()'),
     num: subSectionDoc.$('bcl:num/text()'),
-    content: []
   };
-  let paragraphsDoc = subSectionDoc.$('bcl:paragraph');
+  const paragraphsDoc = subSectionDoc.$('bcl:paragraph');
+  const definitionsDoc = subSectionDoc.$('bcl:definition');
+  if (paragraphsDoc || definitionsDoc) {
+    subSection.content = [];
+  }
   if (paragraphsDoc) {
-    for (let x=0; x < paragraphsDoc.length; x++) {
-      let paragraphDoc = paragraphsDoc.eq(x);
+    for (let x = 0; x < paragraphsDoc.length; x += 1) {
+      const paragraphDoc = paragraphsDoc.eq(x);
       subSection.content.push(parseParagraph(paragraphDoc));
     }
     // console.log(sectionsDoc[0])
   }
-  let definitionsDoc = subSectionDoc.$('bcl:definition');
   if (definitionsDoc) {
-    for (let x=0; x < definitionsDoc.length; x++) {
-      let definitionDoc = definitionsDoc.eq(x);
+    for (let x = 0; x < definitionsDoc.length; x += 1) {
+      const definitionDoc = definitionsDoc.eq(x);
       subSection.content.push(parseDefinition(definitionDoc));
     }
     // console.log(sectionsDoc[0])
@@ -90,64 +92,65 @@ function parseSubSection(subSectionDoc) {
 }
 
 function parseParagraph(paragraphDoc) {
-  let paragraph = {
+  const paragraph = {
     id: paragraphDoc.attr('id'),
-    type: "Paragraph",
-    text: paragraphDoc.$('bcl:text/text()'),
+    type: 'Paragraph',
     num: paragraphDoc.$('bcl:num/text()'),
   };
+  const text = paragraphDoc.$('bcl:text/*');
+  console.log("TEXT: " + text);
+  console.log("TEXT.eq(0): " + text.eq(0));
+  if (text.length === undefined || text.length === 1) {
+    paragraph.text = paragraphDoc.$('bcl:text/text()');
+  } else {
+    let resultText = '';
+    for (let x = 0; x < text.length; x += 1) {
+      const textSection = text.eq(x);
+      if (textSection.name === 'in:desc') {
+        resultText += '{description}';
+        paragraph.description = textSection.text();
+      } else {
+        resultText += textSection.text();
+      }
+      paragraph.text = resultText;
+    }
+  }
+  // text.reduce(function(query, tag) {
+  //   if (tag.name === 'key') {
+  //     return [query, '&', tag.text(), '='].join('');
+  //   } else {
+  //     return query + tag.text();
+  //   }
+  // }
   return paragraph;
 }
 
 function parseDefinition(definitionDoc) {
-  let definition = {
+  const definition = {
     id: definitionDoc.attr('id'),
-    type: "Definition",
+    type: 'Definition',
     term: definitionDoc.$('bcl:text/in:term/text()'),
     text: definitionDoc.$('bcl:text/text()'),
-    links: []
   };
-  // let textDoc = fetchChildNode(definitionDoc, 'bcl:text');
-  // if (textDoc) {
-  //   //console.log("TEXT: " + JSON.stringify(textDoc));
-  //   definition.term = textDoc.$('in:term/text()');
-  //   let textData = textDoc['$$'];
-  //   let linkData = textDoc.$('bcl:link');
-  //   if (textData) {
-  //     if (textData.length === 1) {
-  //       definition.text = textData[0];
-  //     } else {
-  //       let text = [textData[0][0]];
-  //       if (linkData) {
-  //         for (let x=0; x<linkData.length; x++) {
-  //           let link = {
-  //             href: linkData[x]['$']['xlink:href'],
-  //             resourceType: linkData[x]['$']['resource'],
-  //             text: linkData[x]['in:doc'][0],
-  //           };
-  //           definition.links.push(link);
-  //           text.push('${' + link.href + '}')
-  //           text.push(textData[x])
-  //         }
-  //       }
-  //       definition.text = text.join('');
-  //     }
-  //   }
-  // }
-  // let paragraphsDoc = definitionDoc['bcl:paragraph'];
-  // if (paragraphsDoc) {
-  //   // TODO: Add text content to definition text
-  // }
+  const paragraphsDoc = definitionDoc.$('bcl:paragraph');
+  if (paragraphsDoc) {
+    definition.content = [];
+    for (let x = 0; x < paragraphsDoc.length; x += 1) {
+      const paragraphDoc = paragraphsDoc.eq(x);
+      definition.content.push(parseParagraph(paragraphDoc));
+    }
+    // console.log(sectionsDoc[0])
+  }
 
   return definition;
 }
 
 module.exports = function(obj, args, context, info) {
-  const {path} = args;
+  const { path } = args;
   let tocUrl = BCLAWS_URL;
   if (path && Array.isArray(path)) {
     for (let pathItem of path) {
-      tocUrl += "/" + pathItem;
+      tocUrl += '/' + pathItem;
     }
   } else if (path) {
     console.error(`Given path parameter is not an array: ${path}`);
@@ -230,7 +233,7 @@ module.exports = function(obj, args, context, info) {
                   for (let x=0; x < divisionDocs.length; x++) {
                     let divisionDoc = divisionDocs.eq(x);
                     let result = parseDivision(divisionDoc);
-                    console.log("DIVISION: " + JSON.stringify(result));
+                    // console.log("DIVISION: " + JSON.stringify(result));
                     part.content.push(result);
                     // part.content.push(parseDivision(divisionDoc));
                   }
@@ -245,13 +248,13 @@ module.exports = function(obj, args, context, info) {
                     let result = parseSection(sectionDocs);
                     part.content.push(result);
                   } else {
-                    console.log(`MULTIPLE SECTIONS: ${JSON.stringify(sectionDocs)}`);
+                    // console.log(`MULTIPLE SECTIONS: ${JSON.stringify(sectionDocs)}`);
                     for (let x=0; x < sectionDocs.length; x++) {
                       let sectionDoc = sectionDocs.eq(x);
                       //Hack to filter out non-section nodes returned from the API as workaround for XAMEL bug
-                      if (part.id === 'd2e25') {
-                        console.log(`DEFINITION SECTION: ${JSON.stringify(sectionDocs)}`);
-                      }
+                      // if (part.id === 'd2e25') {
+                      //   console.log(`DEFINITION SECTION: ${JSON.stringify(sectionDocs)}`);
+                      // }
                       if (sectionDoc.name !== 'bcl:section') continue;
 
                       let result = parseSection(sectionDoc);

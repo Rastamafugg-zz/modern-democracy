@@ -6,7 +6,7 @@ const SubSection = `
     id: String!
     type: ContentType!
     num: String!
-    text: String!
+    text: String
     content: [SubSectionContent]
   }
 `;

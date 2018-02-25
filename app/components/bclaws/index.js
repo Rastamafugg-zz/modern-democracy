@@ -1,29 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import BCLawsAlphabeticalList from './lawAlphabeticalList';
-import {selectPath} from '../../actions';
+import { selectPath } from '../../actions';
 
-class BCLaws extends Component {
-  render() {
-    // const { data: {lawsDocument = []} } = this.props;
-
-    return (
-      <div>
-        <h1 className='home'>BC Laws Library</h1>
-        <BCLawsAlphabeticalList path={["statreg"]} />
-      </div>
-    );
-  }
+function BCLaws() {
+  return (
+    <div>
+      <h1 className="home">BC Laws Library</h1>
+      <BCLawsAlphabeticalList path={['statreg']} />
+    </div>
+  );
 }
 
-const mapStateToProps = (state) => {
-  return {}
-};
+const mapStateToProps = () => {};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    selectPath: (path) => (dispatch(selectPath(path)))
-  }
-};
+const mapDispatchToProps = (dispatch) => ({
+  selectPath: (path) => (dispatch(selectPath(path))),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(BCLaws);

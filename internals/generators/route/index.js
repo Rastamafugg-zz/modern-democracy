@@ -64,14 +64,14 @@ module.exports = {
       actions.push({
         type: 'modify',
         path: '../../app/routes.js',
-        pattern: /(\s{\n\s{0,}path: '\*',)/g,
+        pattern: /(\s{\r?\n\s{0,}path: '\*',)/g,
         template: trimTemplateFile('routeWithReducer.hbs'),
       });
     } else {
       actions.push({
         type: 'modify',
         path: '../../app/routes.js',
-        pattern: /(\s{\n\s{0,}path: '\*',)/g,
+        pattern: /(\s{\r?\n\s{0,}path: '\*',)/g,
         template: trimTemplateFile('route.hbs'),
       });
     }

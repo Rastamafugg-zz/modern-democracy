@@ -1,6 +1,6 @@
 const BylawSection = `
   type BylawSection {
-    section: String!
+    section: String
     title: String
     text: String
     sections: [BylawSection]

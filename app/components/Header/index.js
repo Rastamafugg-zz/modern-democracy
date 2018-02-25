@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import H1 from '../H1';
+import H2 from '../H2';
 import NavBar from './NavBar';
 import HeaderLink from './HeaderLink';
 import messages from './messages';
@@ -10,10 +10,13 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
   render() {
     return (
       <div>
-        <H1>Modern Democracy</H1>
+        <H2>Modern Democracy</H2>
         <NavBar>
           <HeaderLink to="/bylaws">
             <FormattedMessage {...messages.bylaws} />
+          </HeaderLink>
+          <HeaderLink to="/strataMap">
+            <FormattedMessage {...messages.strataMap} />
           </HeaderLink>
           <HeaderLink to="/bclaws">
             <FormattedMessage {...messages.bclaws} />
